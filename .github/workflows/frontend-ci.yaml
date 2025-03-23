@@ -1,8 +1,10 @@
 name: Frontend Continuous Integration
 
 on:
-# Trigger the workflow on push or pull request,
-# but only for the main and develop branches
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+  # Trigger the workflow on push or pull request,
+  # but only for the main and develop branches
   push:
     branches:
       - main
@@ -10,8 +12,7 @@ on:
   pull_request:
     branches:
       - main
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+  
 
 jobs:
   # Job to install dependencies and run linting
