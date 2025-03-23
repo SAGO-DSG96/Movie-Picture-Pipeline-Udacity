@@ -75,12 +75,23 @@ jobs:
       with:
         node-version: 'latest'
         cache: 'npm'
-        cache-dependency-path: starter/frontend/package-lock.json
+        cache-dependency-path: starter/frontend/package-lock.json    
 
-    - name: Build and Run Docker
+    - name: Build Fronted, Check and Run Docker
       working-directory: starter/frontend
       run: |
-        npm ci
-        npm run build
         docker build --build-arg=REACT_APP_MOVIE_API_URL=http://localhost:5000 --tag=mp-frontend:latest
-        docker run -d -p 3000:3000 mp-frontend:latest
+        docker images|grep movie-pipeline-frontend
+        docker run --name movie-pipeline-frontend -p 3000:3000 -d movie-pipeline-frontend
+
+    - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+    - name: Install NPM and run TEST
+        npm ci
+        npm test
