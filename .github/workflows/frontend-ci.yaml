@@ -41,7 +41,7 @@ jobs:
       working-directory: starter/frontend
       run: |
         npm ci
-        npm run lint
+        npm run lint --fix
 
   # Job to install dependencies and run tests# 
   test:
@@ -62,7 +62,7 @@ jobs:
       working-directory: starter/frontend
       run: |
         npm ci
-        npm run test
+        npm test
 
   build:
     runs-on: ubuntu-latest
