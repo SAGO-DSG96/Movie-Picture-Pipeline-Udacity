@@ -1,11 +1,11 @@
-name: Movie Picture Frontend CI
+name: Frontend Continuous Integration
 
 on:
+  workflow_dispatch:
   pull_request:
     branches:
       - main
   
-  workflow_dispatch:
 
 defaults:
   run:
