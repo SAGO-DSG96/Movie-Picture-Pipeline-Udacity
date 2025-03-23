@@ -4,6 +4,16 @@ on:
   push:
     branches: [main]
 
+defaults:
+  run:
+    working-directory: ./starter/backend 
+
+env:
+  ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
+  ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY_FRONTEND }}
+  ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
+  ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY_BACKEND }}
+
 jobs:
   push-frontend:
     name: Push Frontend to ECR
@@ -25,12 +35,13 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v2
 
       - name: Build, Tag and Push Frontend Docker image
-        env:
-          ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
-          ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY_FRONTEND }}
-        run: |
+        run: 
           docker build -t $ECR_REPOSITORY:latest ./frontend
+      - name: Tag Docker image
+        run:
           docker tag $ECR_REPOSITORY:latest $ECR_REGISTRY/$ECR_REPOSITORY:latest
+      - name: Push Docker image
+        run:
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
 
   push-backend:
@@ -53,10 +64,11 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v2
 
       - name: Build, Tag and Push Backend Docker image
-        env:
-          ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
-          ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY_BACKEND }}
-        run: |
+        run:
           docker build -t $ECR_REPOSITORY:latest ./backend
+      - name: Tag Docker image
+        run:
           docker tag $ECR_REPOSITORY:latest $ECR_REGISTRY/$ECR_REPOSITORY:latest
+      - name: Push Docker image
+        run:
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
