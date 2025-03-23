@@ -13,7 +13,9 @@ on:
     branches:
       - main
   
-
+env:
+  REACT_APP_MOVIE_URL: 'http://localhost:5000'
+  
 jobs:
   # Job to install dependencies and run linting
   linting:
