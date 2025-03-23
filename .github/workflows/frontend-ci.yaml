@@ -15,7 +15,7 @@ on:
   
 env:
   REACT_APP_MOVIE_URL: 'http://localhost:5000'
-  
+
 jobs:
   # Job to install dependencies and run linting
   linting:
@@ -75,7 +75,7 @@ jobs:
     - name: Use Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: 'latest'
+        node-version: '18.14'
         cache: 'npm'
         cache-dependency-path: starter/frontend/package-lock.json    
 
