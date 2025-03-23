@@ -10,8 +10,8 @@ defaults:
 
 env:
   ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
-  ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY_FRONTEND }}
-  ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY_BACKEND }}
+  ECR_REPOSITORY_FRONTEND: ${{ secrets.ECR_REPOSITORY_FRONTEND }}
+  ECR_REPOSITORY_BACKEND: ${{ secrets.ECR_REPOSITORY_BACKEND }}
 
 jobs:
   push-frontend:
@@ -35,13 +35,13 @@ jobs:
 
       - name: Build, Tag and Push Frontend Docker image
         run: 
-          docker build -t $ECR_REPOSITORY:latest ./frontend
+          docker build -t $ECR_REPOSITORY_FRONTEND:latest ./frontend
       - name: Tag Docker image
         run:
-          docker tag $ECR_REPOSITORY:latest $ECR_REGISTRY/$ECR_REPOSITORY:latest
+          docker tag $ECR_REPOSITORY_FRONTEND:latest $ECR_REGISTRY/$ECR_REPOSITORY_FRONTEND:latest
       - name: Push Docker image
         run:
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY_FRONTEND:latest
 
   push-backend:
     name: Push Backend to ECR
@@ -64,10 +64,10 @@ jobs:
 
       - name: Build, Tag and Push Backend Docker image
         run:
-          docker build -t $ECR_REPOSITORY:latest ./backend
+          docker build -t $ECR_REPOSITORY_BACKEND:latest ./backend
       - name: Tag Docker image
         run:
-          docker tag $ECR_REPOSITORY:latest $ECR_REGISTRY/$ECR_REPOSITORY:latest
+          docker tag $ECR_REPOSITORY_BACKEND:latest $ECR_REGISTRY/$ECR_REPOSITORY_BACKEND:latest
       - name: Push Docker image
         run:
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY_BACKEND:latest
