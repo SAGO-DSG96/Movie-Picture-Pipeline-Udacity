@@ -24,7 +24,7 @@ jobs:
     # so that the workflow can access the code
     # in the repository
     - name: Checkout code
-    - uses: actions/checkout@v3
+      uses: actions/checkout@v3
 
     # Set up Node.js
     - name: Use Node.js
