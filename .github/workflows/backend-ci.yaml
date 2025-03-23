@@ -37,7 +37,7 @@ jobs:
       - name: Install dependencies
         run: pipenv install --dev
 
-      - name: Run the linter.
+      - name: Run the linter
         run: pipenv run lint
 
 

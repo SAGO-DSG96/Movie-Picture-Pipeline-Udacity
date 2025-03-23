@@ -9,6 +9,8 @@ jobs:
     name: Push Frontend to ECR
     runs-on: ubuntu-latest
     steps:
+      - name: List files
+          run: ls -R
       - name: Checkout Code
         uses: actions/checkout@v3
 
@@ -35,6 +37,8 @@ jobs:
     name: Push Backend to ECR
     runs-on: ubuntu-latest
     steps:
+      - name: List files
+        run: ls -R
       - name: Checkout Code
         uses: actions/checkout@v3
 
