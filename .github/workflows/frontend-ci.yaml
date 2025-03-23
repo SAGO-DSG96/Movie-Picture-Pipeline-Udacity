@@ -16,7 +16,7 @@ env:
 
 
 jobs:
-  lint:
+  linting:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code from repository
@@ -59,7 +59,7 @@ jobs:
         run:  npm test
 
   build:
-    needs: [lint, test]
+    needs: [linting, test]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code from repository

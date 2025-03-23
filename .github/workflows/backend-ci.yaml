@@ -17,14 +17,26 @@ jobs:
     - name: Use Python environment
       uses: actions/setup-python@v3
       with:
-        python-version: '3.x'
+        python-version: '3.10.6'
 
-    - name: Install dependencies and run lint
-      working-directory: starter/backend
-      run: |
-        pip install pipenv flake8
-        pipenv install
-        pipenv run lint
+    - name: Install pipenv
+      run: pip install pipenv
+
+    - name: Cache Pipenv
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/Pipfile.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
+    - name: Install dependencies
+      run: pipenv install --dev
+
+    - name: Run the linter
+      run: pipenv run lint
+
 
   test:
     runs-on: ubuntu-latest
@@ -36,14 +48,16 @@ jobs:
     - name: Use Python environment
       uses: actions/setup-python@v3
       with:
-        python-version: '3.x'
+        python-version: '3.10.6'
 
-    - name: Install dependencies and run test
-      working-directory: starter/backend
-      run: |
-        pip install pipenv
-        pipenv install
-        pipenv run test
+    - name: Install pipenv
+        run: pip install pipenv
+
+    - name: Install dependencies
+      run: pipenv install
+
+    - name: Run tests
+      run:  pipenv run test
 
   build:
     runs-on: ubuntu-latest
@@ -51,20 +65,31 @@ jobs:
 
 
     steps:
-      - name: Checkout code
+      - name: Checkout code from Repository
         uses: actions/checkout@v3
-      
-      - name: Build Docker, Check image and Run Docker
-        working-directory: starter/backend
-        run: |
-          docker build --tag movie-pipeline-backend:latest .
-          docker images|grep movie-pipeline-backend
-          docker run -p 5000:5000 --name movie-pipeline-backend -d movie-pipeline-backend
-      
-      - name: Install Dependencies
-        run: |
-          pip install pipenv
-          pipenv install
-          pipenv run test
 
+      - name: Set up Python3
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10.6'
+      - name:  Build Backend Docker Image
+        run:  docker build --tag movie-pipeline-backend:latest .
+
+      - name: Check if image is created
+        run: docker images|grep movie-pipeline-backend
+
+      - name: Run docker image
+        run:  docker run -p 5000:5000 --name movie-pipeline-backend -d movie-pipeline-backend
+      
+      - name : Check if Application Runs
+        run: curl  http://localhost:5000/movies
+
+      - name: Install pipenv
+        run: pip install pipenv
+
+      - name: Install dependencies
+        run: pipenv install
+
+      - name: Run tests
+        run:  pipenv run test
       
