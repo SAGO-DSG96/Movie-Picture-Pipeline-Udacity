@@ -11,53 +11,53 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Use Python environment
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.10.6'
+      - name: Use Python environment
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10.6'
 
-    - name: Install pipenv
-      run: pip install pipenv
+      - name: Install pipenv
+        run: pip install pipenv
 
-    - name: Cache Pipenv
-      uses: actions/cache@v3
-      with:
-        path: |
-          ~/.pip
-        key: ${{ runner.os }}-pip-${{ hashFiles('**/Pipfile.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-pip-
+      - name: Cache Pipenv
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/Pipfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
 
-    - name: Install dependencies
-      run: pipenv install --dev
+      - name: Install dependencies
+        run: pipenv install --dev
 
-    - name: Run the linter
-      run: pipenv run lint
+      - name: Run the linter
+        run: pipenv run lint
 
 
   test:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Use Python environment
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.10.6'
+      - name: Use Python environment
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10.6'
 
-    - name: Install pipenv
-      run: pip install pipenv
+      - name: Install pipenv
+        run: pip install pipenv
 
-    - name: Install dependencies
-      run: pipenv install
+      - name: Install dependencies
+        run: pipenv install
 
-    - name: Run tests
-      run:  pipenv run test
+      - name: Run tests
+        run:  pipenv run test
 
   build:
     runs-on: ubuntu-latest
