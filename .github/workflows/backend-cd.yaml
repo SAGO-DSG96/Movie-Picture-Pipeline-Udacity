@@ -45,6 +45,9 @@ jobs:
         run:
           docker push $ECR_REGISTRY/$ECR_REPOSITORY_BACKEND:latest
       
+      - name: Configure kubeconfig
+        run: aws eks update-kubeconfig --name $CLUSTER_NAME --region $AWS_REGION
+
       - name: Deploy Docker Image to Amazon EKS
         run: |
           cd k8s
