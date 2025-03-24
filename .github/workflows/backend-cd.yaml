@@ -38,7 +38,7 @@ jobs:
 
       - name: Build and tag Docker image
         run: |
-          docker build -t $IMAGE_URI ./project/backend
+          docker build -t $IMAGE_URI ./starter/backend
 
       - name: Push Docker image to ECR
         run: |

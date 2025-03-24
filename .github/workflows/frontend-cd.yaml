@@ -78,7 +78,7 @@ jobs:
 
       - name: Build, Tag and Push Frontend Docker image
         run: 
-          docker build -t $IMAGE_NAME ./project/frontend  
+          docker build -t $IMAGE_NAME ./starter/frontend  
 
       - name: Tag Docker image
         run:
