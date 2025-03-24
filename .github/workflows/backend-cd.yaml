@@ -96,11 +96,11 @@ jobs:
       
       - name: Tag Docker image
         run:
-          docker tag $ECR_REPOSITORY_BACKEND:latest $ECR_REGISTRY/$ECR_REPOSITORY_BACKEND:$GITHUB_SHA
+          docker tag $ECR_REPOSITORY_BACKEND:latest $ECR_REGISTRY/$ECR_REPOSITORY_BACKEND:latest
       
       - name: Push Docker image
         run:
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY_BACKEND:$GITHUB_SHA
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY_BACKEND:latest
       
       - name: Configure kubeconfig
         run: aws eks update-kubeconfig --name movie-pipeline-cluster --region us-east-1
@@ -108,7 +108,7 @@ jobs:
       - name: Deploy Docker Image to Amazon EKS
         run: |
           cd k8s
-          kustomize edit set image $ECR_REGISTRY/$ECR_REPOSITORY_BACKEND:$GITHUB_SHA
+          kustomize edit set image $ECR_REGISTRY/$ECR_REPOSITORY_BACKEND:latest
           kustomize build | kubectl apply -f -
 
       - name: K8 status
