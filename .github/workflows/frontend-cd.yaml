@@ -4,14 +4,10 @@ on:
   push:
     branches: [main]
 
-defaults:
-  run:
-    working-directory: ./starter/frontend
-
 env:
+  AWS_REGION: ${{ secrets.AWS_REGION }}
   ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
   ECR_REPOSITORY_FRONTEND: ${{ secrets.ECR_REPOSITORY_FRONTEND }}
-  IMAGE_NAME: ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY_FRONTEND }}:latest
 
 jobs:
   linting:
@@ -78,12 +74,12 @@ jobs:
 
       - name: Build, Tag and Push Frontend Docker image
         run: 
-          docker build -t $IMAGE_NAME ./starter/frontend  
+          docker build -t $ECR_REPOSITORY_FRONTEND:latest ./starter/frontend
 
       - name: Tag Docker image
         run:
-          docker push $IMAGE_NAME
-
+          docker tag $ECR_REPOSITORY_FRONTEND:latest $ECR_REGISTRY/$ECR_REPOSITORY_FRONTEND:latest
+      
       - name: List Docker images
         run: docker images
 

@@ -8,7 +8,6 @@ env:
   AWS_REGION: ${{ secrets.AWS_REGION }}
   ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
   ECR_REPOSITORY_BACKEND: ${{ secrets.ECR_REPOSITORY_BACKEND }}
-  IMAGE_URI: ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY_BACKEND }}:latest
 
 jobs:
   build-and-deploy:
@@ -36,14 +35,17 @@ jobs:
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Build and tag Docker image
+      - name: Build Docker image
         run: |
-          docker build -t $IMAGE_URI ./starter/backend
-
-      - name: Push Docker image to ECR
-        run: |
-          docker push $IMAGE_URI
-
+          docker build -t $ECR_REPOSITORY_BACKEND:latest ./starter/backend
+      
+      - name: Tag Docker image
+        run:
+          docker tag $ECR_REPOSITORY_BACKEND:latest $ECR_REGISTRY/$ECR_REPOSITORY_BACKEND:latest
+      
+      - name: Push Docker image
+        run:
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY_BACKEND:latest
       
       - name: Deploy Docker Image to Amazon EKS
         working-directory: k8s
