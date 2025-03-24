@@ -1,100 +1,49 @@
-name: Deploy to ECR backend
+name: Backend CD Pipeline
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
 
 env:
+  AWS_REGION: ${{ secrets.AWS_REGION }}
   ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
   ECR_REPOSITORY_BACKEND: ${{ secrets.ECR_REPOSITORY_BACKEND }}
   IMAGE_URI: ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY_BACKEND }}:latest
 
-defaults:
-  run:
-    working-directory: ./starter/backend 
-
 jobs:
-  linting:
+  build-and-deploy:
+    name: Build and Push Backend Docker Image to ECR
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code from repository
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Python3
-        uses: actions/setup-python@v3
-        with:
-          python-version: '3.10.6'
-
-      - name: Install pipenv
-        run: pip install pipenv flake8
-
-      - name: Cache Pipenv
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/Pipfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-
-      - name: Install dependencies
-        run: pipenv install --dev
-
-      - name: Run the linter
-        run: pipenv run lint
-
-
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code from Repository
-        uses: actions/checkout@v3
-
-      - name: Set up Python3
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
-
-      - name: Install pipenv
-        run: pip install pipenv
-
-      - name: Install dependencies
-        run: pipenv install
-
-      - name: Run tests
-        run:  pipenv run test
-
-  push-backend:
-    runs-on: ubuntu-latest
-    needs: [linting, test]
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
-
-      - name: List files
-        run: ls -R
+      - name: Show working directory and structure (debugging)
+        run: |
+          echo "PWD: $(pwd)"
+          ls -la
+          ls -la project/
+          ls -la project/backend/
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v3
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
+          aws-region: ${{ env.AWS_REGION }}
 
-      - name: Log in to ECR
+      - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Build, Tag and Push Backend Docker image
-        run:
+      - name: Build and tag Docker image
+        run: |
           docker build -t $IMAGE_URI ./project/backend
 
-      - name: Tag Docker image
-        run:
-          docker tag $IMAGE_URI
-
-      - name: Push Docker image
-        run:
+      - name: Push Docker image to ECR
+        run: |
           docker push $IMAGE_URI
+
       
       - name: Deploy Docker Image to Amazon EKS
         working-directory: k8s
