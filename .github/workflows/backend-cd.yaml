@@ -8,6 +8,11 @@ env:
   AWS_REGION: ${{ secrets.AWS_REGION }}
   ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
   ECR_REPOSITORY_BACKEND: ${{ secrets.ECR_REPOSITORY_BACKEND }}
+  CLUSTER_NAME: movie-pipeline-cluster
+
+defaults:
+  run:
+    working-directory: ./starter/frontend
 
 jobs:
   build-and-deploy:
@@ -30,7 +35,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t $ECR_REPOSITORY_BACKEND:latest ./starter/backend
+          docker build -t $ECR_REPOSITORY_BACKEND:latest .
       
       - name: Tag Docker image
         run:
