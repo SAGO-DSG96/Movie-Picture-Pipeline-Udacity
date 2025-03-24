@@ -11,6 +11,7 @@ defaults:
 env:
   ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
   ECR_REPOSITORY_FRONTEND: ${{ secrets.ECR_REPOSITORY_FRONTEND }}
+  IMAGE_NAME: ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY_FRONTEND }}
 
 jobs:
   linting:
@@ -77,10 +78,15 @@ jobs:
 
       - name: Build, Tag and Push Frontend Docker image
         run: 
-          docker build --build-arg=REACT_APP_MOVIE_API_URL=$REACT_APP_MOVIE_URL --tag=movie-pipeline-frontend:latest .
+          docker build -t $IMAGE_NAME ./frontend
+
       - name: Tag Docker image
         run:
-          docker tag $ECR_REPOSITORY_FRONTEND:latest $ECR_REGISTRY/$ECR_REPOSITORY_FRONTEND:latest
+          docker push $IMAGE_NAME
+
+      - name: List Docker images
+        run: docker images
+
       - name: Push Docker image
         run:
           docker push $ECR_REGISTRY/$ECR_REPOSITORY_FRONTEND:latest
