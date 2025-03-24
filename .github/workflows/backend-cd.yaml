@@ -18,13 +18,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Show working directory and structure (debugging)
-        run: |
-          echo "PWD: $(pwd)"
-          ls -la
-          ls -la project/
-          ls -la project/backend/
-
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v3
         with:
