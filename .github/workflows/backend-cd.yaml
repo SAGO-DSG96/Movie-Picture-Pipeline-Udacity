@@ -48,6 +48,5 @@ jobs:
       - name: Deploy Docker Image to Amazon EKS
         working-directory: k8s
         run: |
-          aws eks update-kubeconfig --name udacity-project4 --region us-east-1
           kustomize edit set image $ECR_REGISTRY/$ECR_REPOSITORY_BACKEND:$IMAGE_TAG
           kustomize build | kubectl apply -f -
