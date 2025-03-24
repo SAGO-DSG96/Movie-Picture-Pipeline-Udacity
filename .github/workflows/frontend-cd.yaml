@@ -11,7 +11,7 @@ defaults:
 env:
   ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
   ECR_REPOSITORY_FRONTEND: ${{ secrets.ECR_REPOSITORY_FRONTEND }}
-  IMAGE_NAME: ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY_FRONTEND }}
+  IMAGE_NAME: ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY_FRONTEND }}:latest
 
 jobs:
   linting:
@@ -78,7 +78,7 @@ jobs:
 
       - name: Build, Tag and Push Frontend Docker image
         run: 
-          docker build -t $IMAGE_NAME ./frontend
+          docker build -t $IMAGE_NAME ./project/frontend  
 
       - name: Tag Docker image
         run:

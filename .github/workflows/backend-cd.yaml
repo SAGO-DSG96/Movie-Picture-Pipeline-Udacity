@@ -86,12 +86,12 @@ jobs:
 
       - name: Build, Tag and Push Backend Docker image
         run:
-          docker build -t $IMAGE_URI ./backend
+          docker build -t $IMAGE_URI ./project/backend
 
       - name: Tag Docker image
         run:
           docker tag $IMAGE_URI
-          
+
       - name: Push Docker image
         run:
           docker push $IMAGE_URI
