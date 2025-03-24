@@ -38,22 +38,22 @@ jobs:
         - name: Run lint
           run: npm run lint --fix
 
-    test:
-      runs-on: ubuntu-latest
-      steps:
-        - name: Checkout code from Repository
-          uses: actions/checkout@v3
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code from Repository
+        uses: actions/checkout@v3
 
-        - name: Set up Node.js
-          uses: actions/setup-node@v3
-          with:
-            node-version: '18.14'
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.14'
 
-        - name: Install dependencies
-          run: npm ci
+      - name: Install dependencies
+        run: npm ci
 
-        - name: Run tests
-          run:  npm test
+      - name: Run tests
+        run:  npm test
 
   push-frontend:
     needs: [linting, test]
