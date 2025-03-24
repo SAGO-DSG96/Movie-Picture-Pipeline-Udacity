@@ -46,7 +46,7 @@ jobs:
           docker push $ECR_REGISTRY/$ECR_REPOSITORY_BACKEND:latest
       
       - name: Deploy Docker Image to Amazon EKS
-        working-directory: k8s
         run: |
-          kustomize edit set image $ECR_REGISTRY/$ECR_REPOSITORY_BACKEND:$IMAGE_TAG
+          cd k8s
+          kustomize edit set image $ECR_REGISTRY/$ECR_REPOSITORY_BACKEND:latest
           kustomize build | kubectl apply -f -

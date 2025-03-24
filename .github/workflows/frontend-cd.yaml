@@ -95,7 +95,7 @@ jobs:
       - name: Deploy to K8s
         run :   |
             cd k8s
-            kustomize edit set image frontend=$ECR_REGISTRY/$ECR_REPOSITORY_FRONTEND:${GITHUB_SHA}
+            kustomize edit set image frontend=$ECR_REGISTRY/$ECR_REPOSITORY_FRONTEND:latest
             kustomize build|kubectl apply -k .
       
       - name: Gather K8 info
