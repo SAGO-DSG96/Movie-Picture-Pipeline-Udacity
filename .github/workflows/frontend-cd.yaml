@@ -8,7 +8,7 @@ env:
   AWS_REGION: ${{ secrets.AWS_REGION }}
   ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
   ECR_REPOSITORY_FRONTEND: ${{ secrets.ECR_REPOSITORY_FRONTEND }}
-  CLUSTER_NAME: movie-pipeline-cluster-frontend
+  CLUSTER_NAME: movie-pipeline-cluster
 
 defaults:
   run:
