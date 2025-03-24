@@ -4,10 +4,6 @@ on:
   push:
     branches: [main]
 
-defaults:
-  run:
-    working-directory: ./starter/backend 
-
 env:
   ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
   ECR_REPOSITORY_FRONTEND: ${{ secrets.ECR_REPOSITORY_FRONTEND }}
@@ -18,10 +14,10 @@ jobs:
     name: Push Frontend to ECR
     runs-on: ubuntu-latest
     steps:
-      - name: List files
-        run: ls -R
       - name: Checkout Code
         uses: actions/checkout@v3
+
+      
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v3
@@ -30,6 +26,9 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
+      - name: List files
+              run: ls -R
+              
       - name: Log in to ECR
         uses: aws-actions/amazon-ecr-login@v2
 
