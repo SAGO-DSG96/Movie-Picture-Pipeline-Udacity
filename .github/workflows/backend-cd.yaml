@@ -8,11 +8,11 @@ env:
   AWS_REGION: ${{ secrets.AWS_REGION }}
   ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
   ECR_REPOSITORY_BACKEND: ${{ secrets.ECR_REPOSITORY_BACKEND }}
-  CLUSTER_NAME: movie-pipeline-cluster
+  CLUSTER_NAME: movie-pipeline-cluster-backend
 
 defaults:
   run:
-    working-directory: ./starter/frontend
+    working-directory: ./starter/backend
 
 jobs:
   build-and-deploy:
