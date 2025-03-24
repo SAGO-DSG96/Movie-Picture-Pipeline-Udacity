@@ -108,5 +108,9 @@ jobs:
       - name: Deploy Docker Image to Amazon EKS
         run: |
           cd k8s
-          kustomize edit set image $ECR_REGISTRY/$ECR_REPOSITORY_BACKEND:latest
+          kustomize edit set image $ECR_REGISTRY/$ECR_REPOSITORY_BACKEND
           kustomize build | kubectl apply -f -
+
+      - name: K8 status
+        run :   |
+          kubectl get pods -A
