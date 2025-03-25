@@ -71,7 +71,9 @@ jobs:
   build-and-deploy:
     needs: [linting, test]
     runs-on: ubuntu-latest
-
+    outputs:
+      backend_url: ${{ steps.deploy-backend.outputs.backend_url }}  # Valor generado de un paso de despliegue
+    
     steps:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v3
