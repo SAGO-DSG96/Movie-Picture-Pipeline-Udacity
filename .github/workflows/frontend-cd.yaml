@@ -16,30 +16,30 @@ defaults:
 
 jobs:
   linting:
-      runs-on: ubuntu-latest
-      steps:
-        - name: Checkout code from repository
-          uses: actions/checkout@v3
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code from repository
+        uses: actions/checkout@v3
 
-        - name: Set up Node.js
-          uses: actions/setup-node@v3
-          with:
-            node-version: '18.14'
-            cache-dependency-path: package-lock.json
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.14'
+          cache-dependency-path: package-lock.json
 
-        - name: Cache NPM dependencies
-          uses: actions/cache@v3
-          with:
-            path: ~/.npm
-            key: ${{ runner.OS }}-npm-cache-${{ hashFiles('**/package-lock.json') }}
-            restore-keys: |
-              ${{ runner.OS }}-npm-cache-
+      - name: Cache NPM dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.OS }}-npm-cache-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.OS }}-npm-cache-
 
-        - name: Install NPM dependencies
-          run: npm ci
+      - name: Install NPM dependencies
+        run: npm ci
 
-        - name: Run lint
-          run: npm run lint
+      - name: Run lint
+        run: npm run lint
 
   test:
     runs-on: ubuntu-latest
@@ -65,7 +65,7 @@ jobs:
         run: npm ci
 
       - name: Run tests
-        run:  npm run test
+        run: npm run test
 
   push-frontend:
     needs: [linting, test]
@@ -95,24 +95,26 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Build Docker image for frontend
-        run: 
-          docker build --build-arg REACT_APP_MOVIE_API_URL=${{ secrets.REACT_APP_BACKEND_URL }} -t $ECR_REGISTRY/$ECR_REPOSITORY_FRONTEND:latest .
-      
+        run: |
+          # Create a unique tag using the Git commit hash and timestamp
+          IMAGE_TAG=${{ github.sha }}-${{ github.run_id }}
+          echo "Building Docker image with tag: $IMAGE_TAG"
+          docker build --build-arg REACT_APP_MOVIE_API_URL=${{ secrets.REACT_APP_BACKEND_URL }} -t $ECR_REGISTRY/$ECR_REPOSITORY_FRONTEND:$IMAGE_TAG .
 
       - name: Push Docker image
-        run:
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY_FRONTEND:latest
+        run: |
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY_FRONTEND:$IMAGE_TAG
 
       - name: Configure kubeconfig
-        run: 
-            aws eks update-kubeconfig --name movie-pipeline-cluster --region us-east-1
+        run: |
+          aws eks update-kubeconfig --name movie-pipeline-cluster --region us-east-1
 
       - name: Deploy to K8s
-        run :   |
-            cd k8s
-            kustomize edit set image frontend=$ECR_REGISTRY/$ECR_REPOSITORY_FRONTEND:latest
-            kustomize build | kubectl apply -f -
-      
-      - name: K8 info
-        run :   |
-            kubectl get svc -A
+        run: |
+          cd k8s
+          kustomize edit set image frontend=$ECR_REGISTRY/$ECR_REPOSITORY_FRONTEND:$IMAGE_TAG
+          kustomize build | kubectl apply -f -
+
+      - name: K8s info
+        run: |
+          kubectl get svc -A
