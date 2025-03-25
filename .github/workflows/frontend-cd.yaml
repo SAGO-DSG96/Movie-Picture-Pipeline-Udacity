@@ -106,7 +106,7 @@ jobs:
         run :   |
             cd k8s
             kustomize edit set image frontend=$ECR_REGISTRY/$ECR_REPOSITORY_FRONTEND:latest
-            kustomize build . | kubectl apply -f -
+            kustomize build | kubectl apply -f -
       
       - name: K8 info
         run :   |
