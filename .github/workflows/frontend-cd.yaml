@@ -89,10 +89,7 @@ jobs:
       - name: Build Docker image for frontend
         run: 
           docker build --build-arg REACT_APP_MOVIE_API_URL=http://backend-url -t $ECR_REGISTRY/$ECR_REPOSITORY_FRONTEND:latest .
-      - name: Tag Docker image for ECR
-        run: 
-          docker tag $ECR_REPOSITORY_FRONTEND:latest $ECR_REGISTRY/$ECR_REPOSITORY_FRONTEND:latest
-
+    
       - name: Push Docker image
         run:
           docker push $ECR_REGISTRY/$ECR_REPOSITORY_FRONTEND:latest
