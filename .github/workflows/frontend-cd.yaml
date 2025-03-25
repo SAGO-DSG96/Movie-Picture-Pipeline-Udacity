@@ -86,11 +86,10 @@ jobs:
 
       - name: Build, Tag and Push Frontend Docker image
         run: 
-          docker build --build-arg REACT_APP_MOVIE_API_URL=${{ secrets.BACKEND_API_URL }} -t frontend-image .
+          docker build --build-arg REACT_APP_MOVIE_API_URL=${{ secrets.BACKEND_API_URL }} -t $ECR_REPOSITORY_FRONTEND:latest .
 
       - name: Tag Docker image
         run:
-        
           docker tag $ECR_REPOSITORY_FRONTEND:latest $ECR_REGISTRY/$ECR_REPOSITORY_FRONTEND:latest
       
       - name: List Docker images
