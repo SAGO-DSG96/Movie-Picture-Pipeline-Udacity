@@ -90,6 +90,7 @@ jobs:
         run: 
           docker build --build-arg REACT_APP_MOVIE_API_URL=${{ secrets.REACT_APP_BACKEND_URL }} -t $ECR_REGISTRY/$ECR_REPOSITORY_FRONTEND:latest .
       
+      
       - name: Push Docker image
         run:
           docker push $ECR_REGISTRY/$ECR_REPOSITORY_FRONTEND:latest
