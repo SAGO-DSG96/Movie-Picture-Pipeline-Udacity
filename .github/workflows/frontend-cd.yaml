@@ -62,7 +62,8 @@ jobs:
         run:  npm run test
 
   push-frontend:
-    needs: [linting, test, backend-deploy]
+    needs: [linting, test]
+    needs: backend-deploy
     runs-on: ubuntu-latest
     steps:
       - name: Configure AWS credentials

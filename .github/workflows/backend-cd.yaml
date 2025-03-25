@@ -108,3 +108,9 @@ jobs:
       - name: K8 status
         run :   |
           kubectl get pods -A
+      
+      - name: Deploy backend
+        id: deploy-backend
+        run: |
+          # Despliegue de backend
+          echo "::set-output name=backend_url::http://backend-url"  # Esta es la URL del servicio backend desplegado
