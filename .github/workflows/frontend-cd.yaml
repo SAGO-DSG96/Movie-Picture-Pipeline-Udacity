@@ -97,13 +97,11 @@ jobs:
       - name: Build Docker image for frontend
         run: |
           # Create a unique tag using the Git commit hash and timestamp
-          IMAGE_TAG=${{ github.sha }}-${{ github.run_id }}
-          echo "Building Docker image with tag: $IMAGE_TAG"
-          docker build --build-arg REACT_APP_MOVIE_API_URL=${{ secrets.REACT_APP_BACKEND_URL }} -t $ECR_REGISTRY/$ECR_REPOSITORY_FRONTEND:$IMAGE_TAG .
+          docker build --build-arg REACT_APP_MOVIE_API_URL=${{ secrets.REACT_APP_BACKEND_URL }} -t $ECR_REGISTRY/$ECR_REPOSITORY_FRONTEND:${{ github.sha }} .
 
       - name: Push Docker image
         run: |
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY_FRONTEND:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY_FRONTEND:${{ github.sha }}
 
       - name: Configure kubeconfig
         run: |
@@ -112,7 +110,7 @@ jobs:
       - name: Deploy to K8s
         run: |
           cd k8s
-          kustomize edit set image frontend=$ECR_REGISTRY/$ECR_REPOSITORY_FRONTEND:$IMAGE_TAG
+          kustomize edit set image frontend=$ECR_REGISTRY/$ECR_REPOSITORY_FRONTEND:${{ github.sha }}
           kustomize build | kubectl apply -f -
 
       - name: K8s info

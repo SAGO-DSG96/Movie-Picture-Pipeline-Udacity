@@ -90,14 +90,12 @@ jobs:
 
       - name: Build Docker image
         run: |
-          # Generate a unique tag using Git commit hash and GitHub Actions run ID
-          IMAGE_TAG=${{ github.sha }}-${{ github.run_id }}
-          echo "Building Docker image with tag: $IMAGE_TAG"
-          docker build --build-arg REACT_APP_MOVIE_API_URL=http://localhost:5000 --tag $ECR_REGISTRY/$ECR_REPOSITORY_BACKEND:$IMAGE_TAG .
+          echo "Building Docker image with tag: ${{ github.sha }}"
+          docker build --build-arg REACT_APP_MOVIE_API_URL=http://localhost:5000 --tag $ECR_REGISTRY/$ECR_REPOSITORY_BACKEND:${{ github.sha }} .
 
       - name: Push Docker image
         run:
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY_BACKEND:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY_BACKEND:${{ github.sha }}
 
       - name: Configure kubeconfig
         run: |
@@ -106,7 +104,7 @@ jobs:
       - name: Deploy Docker Image to Amazon EKS
         run: |
           cd k8s
-          kustomize edit set image backend=$ECR_REGISTRY/$ECR_REPOSITORY_BACKEND:$IMAGE_TAG
+          kustomize edit set image backend=$ECR_REGISTRY/$ECR_REPOSITORY_BACKEND:${{ github.sha }}
           kustomize build | kubectl apply -f -
 
       - name: K8s status
