@@ -96,7 +96,7 @@ jobs:
       
       - name: Tag Docker image
         run:
-          docker tag $ECR_REPOSITORY_BACKEND:latest $ECR_REGISTRY/$ECR_REPOSITORY_BACKEND:latest .
+          docker tag $ECR_REGISTRY/$ECR_REPOSITORY_BACKEND:latest .
       
       - name: Push Docker image
         run:
