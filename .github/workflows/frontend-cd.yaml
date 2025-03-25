@@ -1,4 +1,4 @@
-name: Deploy to ECR frontend
+name: Deploy to ECR Frontend CD Pipeline
 
 on:
   push:
