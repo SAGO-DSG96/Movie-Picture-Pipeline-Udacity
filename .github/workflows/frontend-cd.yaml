@@ -25,6 +25,7 @@ jobs:
           uses: actions/setup-node@v3
           with:
             node-version: '18.14'
+            cache-dependency-path: package-lock.json
 
         - name: Cache NPM dependencies
           uses: actions/cache@v3
@@ -38,7 +39,7 @@ jobs:
           run: npm ci
 
         - name: Run lint
-          run: npm run lint --fix
+          run: npm run lint
 
   test:
     runs-on: ubuntu-latest
@@ -50,12 +51,13 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18.14'
+          cache-dependency-path: package-lock.json
 
       - name: Install dependencies
         run: npm ci
 
       - name: Run tests
-        run:  npm test
+        run:  npm run test
 
   push-frontend:
     needs: [linting, test]
@@ -73,7 +75,7 @@ jobs:
 
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v2
-        
+
       - name: List files
         run: ls -R
 
@@ -86,14 +88,7 @@ jobs:
 
       - name: Build, Tag and Push Frontend Docker image
         run: 
-          docker build --build-arg REACT_APP_MOVIE_API_URL=http://localhost:5000 -t $ECR_REPOSITORY_FRONTEND:latest .
-
-      - name: Tag Docker image
-        run:
-          docker tag $ECR_REPOSITORY_FRONTEND:latest $ECR_REGISTRY/$ECR_REPOSITORY_FRONTEND:latest
-      
-      - name: List Docker images
-        run: docker images
+          docker build --build-arg REACT_APP_MOVIE_API_URL=http://localhost:5000 --tag $ECR_REPOSITORY_FRONTEND:latest .
 
       - name: Push Docker image
         run:
