@@ -39,8 +39,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pip-
 
+      - name: Install pipenv
+        run: pip install pipenv flake8
+
       - name: Install dependencies
-        run: pipenv install --dev
+        run: pipenv install
 
       - name: Run the linter
         run: pipenv run lint
@@ -92,7 +95,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY_BACKEND:latest .
+          docker build --tag=$ECR_REGISTRY/$ECR_REPOSITORY_BACKEND:latest .
       
       - name: Push Docker image
         run:
