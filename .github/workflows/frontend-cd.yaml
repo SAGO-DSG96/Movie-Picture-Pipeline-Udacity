@@ -63,9 +63,6 @@ jobs:
     needs: [linting, test]
     runs-on: ubuntu-latest
     steps:
-      - name: Echo
-        run: echo ${{ env.BACKEND_URL }}
-
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v3
         with:
@@ -91,7 +88,7 @@ jobs:
 
       - name: Build Docker image for frontend
         run: 
-          docker build --build-arg REACT_APP_MOVIE_API_URL=${{ env.BACKEND_URL }} -t $ECR_REGISTRY/$ECR_REPOSITORY_FRONTEND:latest .
+          docker build --build-arg REACT_APP_MOVIE_API_URL=http://backend-url -t $ECR_REGISTRY/$ECR_REPOSITORY_FRONTEND:latest .
       - name: Tag Docker image for ECR
         run: 
           docker tag $ECR_REPOSITORY_FRONTEND:latest $ECR_REGISTRY/$ECR_REPOSITORY_FRONTEND:latest
